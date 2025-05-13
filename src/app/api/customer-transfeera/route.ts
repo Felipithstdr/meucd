@@ -16,6 +16,16 @@ export async function POST(req: Request) {
       ? `${process.env.URL_TRANSFEERA_DESENV}/payment_links`
       : `${process.env.URL_TRANSFEERA_PROD}/payment_links`;
 
+  const client_id =
+    process.env.NODE_ENV === "development"
+      ? process.env.CLIENT_ID_TRANSFEERA_DESENV
+      : process.env.CLIENT_ID_TRANSFEERA_PROD;
+
+  const client_secret =
+    process.env.NODE_ENV === "development"
+      ? process.env.CLIENT_SECRET_TRANSFEERA_DESENV
+      : process.env.CLIENT_SECRET_TRANSFEERA_PROD;
+
   try {
     const data = await req.json();
 
@@ -58,8 +68,8 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         grant_type: "client_credentials",
-        client_id: process.env.CLIENT_ID_TRANSFEERA_DESENV,
-        client_secret: process.env.CLIENT_SECRET_TRANSFEERA_DESENV,
+        client_id,
+        client_secret,
       }),
     };
 
