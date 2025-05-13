@@ -102,6 +102,8 @@ export async function POST(req: Request) {
     };
 
     const res_once = await fetch(api_pay, options_pay);
+    console.log(res_once);
+
     const dataPay = await res_once.json();
     console.log(dataPay);
 
