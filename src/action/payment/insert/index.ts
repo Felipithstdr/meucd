@@ -9,24 +9,25 @@ interface CustomerData {
   paymentCode: string;
   serviceId: number;
   quantity: number;
-  status: PaymentStatus;
 }
 
 export const createdPayment = async (customerData: CustomerData) => {
   try {
     const order = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(order);
 
     //Criar pagamento
     const createdPayment = await db.payment.create({
       data: {
         customerId: customerData.customerId,
-        order: order,
+        order,
         paymentCode: customerData.paymentCode,
         serviceId: customerData.serviceId,
         quantity: customerData.quantity,
-        status: customerData.status,
+        status: PaymentStatus.created,
       },
     });
+    console.log(createdPayment);
 
     return { success: createdPayment };
   } catch (error) {

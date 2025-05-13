@@ -8,7 +8,7 @@ export const resetTemplate = `
   <body style="background-color: #fff; color: #212121; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 16px;">
     <section style="background-color: white; padding: 16px; border-radius: 4px;">
       <header style="margin-bottom: 24px;">
-        <a href="https://meucd.vercel.app"><img src="https://res.cloudinary.com/domyxfxko/image/upload/v1743615913/irfacil/pcqmwlodq1vxxa87b1nt.png" alt="Logotipo" style="width: auto; height: 28px;" /></a>
+        <a href="https://meucd.vercel.app"><img src="https://res.cloudinary.com/domyxfxko/image/upload/v1747147222/meucd/buc61kvny6w3aknvkpat.png" alt="Logotipo" style="width: auto; height: 92px;" /></a>
       </header>
 
       <main style="margin-top: 32px;">

@@ -15,6 +15,21 @@ export async function POST(req: Request) {
       ? `${process.env.URL_TRANSFEERA_DESENV}/payment_links`
       : `${process.env.URL_TRANSFEERA_PROD}/payment_links`;
 
+  const client_id =
+    process.env.NODE_ENV === "development"
+      ? process.env.CLIENT_ID_TRANSFEERA_DESENV
+      : process.env.CLIENT_ID_TRANSFEERA_PROD;
+
+  const client_secret =
+    process.env.NODE_ENV === "development"
+      ? process.env.CLIENT_SECRET_TRANSFEERA_DESENV
+      : process.env.CLIENT_SECRET_TRANSFEERA_PROD;
+
+  const pix_key =
+    process.env.NODE_ENV === "development"
+      ? process.env.PIX_DESENV
+      : process.env.PIX_PROD;
+
   try {
     const data = await req.json();
 
@@ -47,8 +62,8 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         grant_type: "client_credentials",
-        client_id: process.env.CLIENT_ID_TRANSFEERA_DESENV,
-        client_secret: process.env.CLIENT_SECRET_TRANSFEERA_DESENV,
+        client_id,
+        client_secret,
       }),
     };
 
@@ -69,10 +84,26 @@ export async function POST(req: Request) {
         "User-Agent": "URBE.PAY (backoffice@iroll.com.br)",
       },
       body: JSON.stringify({
+        // payment_methods: ["pix"],
+        // amount: totalPrice,
+        // name: data.name,
+        // expires_at,
+
+        payment_method_details: {
+          pix: {
+            pix_key,
+          },
+        },
+        payer: {
+          name: "Teste",
+          trade_name: "Teste",
+          tax_id: "35767344000105",
+        },
         payment_methods: ["pix"],
-        amount: totalPrice,
-        name: data.name,
-        expires_at,
+        amount: totalPrice.totalWithDiscount,
+        due_date: "2025-05-14",
+        expiration_date: expires_at,
+        description: "Certificado",
       }),
     };
 
@@ -84,7 +115,6 @@ export async function POST(req: Request) {
       paymentCode: dataPay.id,
       serviceId: data.serviceId,
       quantity: data.quantity,
-      status: "pending",
     });
 
     return NextResponse.json(dataPay, { status: 200 });

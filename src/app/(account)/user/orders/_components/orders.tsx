@@ -19,8 +19,8 @@ interface PaymentProps {
 const Orders = ({ payments }: PaymentProps) => {
   const paySatusColor = (status: PaymentStatus) => {
     if (status === "paid") return "bg-lime-400 font-bold text-base";
-    if (status === "pending") return "bg-yellow-300 font-bold text-base";
-    if (status === "expired") return "bg-orange-400";
+    if (status === "created") return "bg-yellow-300 font-bold text-base";
+    if (status === "canceled") return "bg-orange-400";
     return "bg-red-500";
   };
 
@@ -41,9 +41,9 @@ const Orders = ({ payments }: PaymentProps) => {
             )
             .map((payment) => (
               <React.Fragment key={payment.id}>
-                <Card className="bg-white bg-opacity-5" shadow="sm">
+                <Card className="bg-white dark:bg-neutral-800" shadow="sm">
                   <CardHeader className="flex-row items-center gap-4">
-                    <p className="text-neutral-600 dark:text-black">
+                    <p className="text-neutral-600 dark:text-white">
                       Pagamento
                     </p>
                   </CardHeader>
@@ -53,11 +53,11 @@ const Orders = ({ payments }: PaymentProps) => {
                     >
                       {getCustomerStatusPay(payment.status)}
                     </Chip>
-                    <span className="mt-3 text-sm text-gray-500 sm:text-lg">
+                    <span className="mt-3 text-sm text-gray-500 sm:text-lg dark:text-white">
                       Pedido: #{payment.order}
                     </span>
 
-                    <span className="hidden text-sm text-gray-500 sm:block sm:text-lg">
+                    <span className="hidden text-sm text-gray-500 sm:block sm:text-lg dark:text-white">
                       Data do pagamento:{" "}
                       {format(new Date(payment.createdAt), "dd/MM/yyyy", {
                         locale: ptBR,
@@ -73,15 +73,15 @@ const Orders = ({ payments }: PaymentProps) => {
                 </Card>
 
                 {/* Card de Certificado Digital */}
-                <Card className="bg-white bg-opacity-5" shadow="sm">
+                <Card className="bg-white dark:bg-neutral-800" shadow="sm">
                   <CardHeader className="flex-row items-center gap-4">
-                    <p className="text-neutral-600 dark:text-black">
+                    <p className="text-neutral-600 dark:text-white">
                       Certificado Digital
                     </p>
                   </CardHeader>
                   <CardBody>
                     <Chip className="Capitalize">{payment.service.name}</Chip>
-                    <span className="mt-3 text-sm text-gray-500 sm:text-lg">
+                    <span className="mt-3 text-sm text-gray-500 sm:text-lg dark:text-white">
                       Quantidade: {payment.quantity}
                     </span>
                   </CardBody>

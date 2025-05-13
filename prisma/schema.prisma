@@ -100,9 +100,11 @@ model Admin {
 
 enum PaymentStatus {
   paid
-  pending
-  waiting_payment
-  expired
+  created
+  processing
+  refunded
+  canceling
+  canceled
 }
 
 enum PaymentMethod {

@@ -2,20 +2,20 @@ import { PaymentStatus } from "@prisma/client";
 
 const PAYMENT_STATUS_OPTIONS = [
   {
-    value: PaymentStatus.waiting_payment,
-    label: "Aguardando",
+    value: PaymentStatus.processing,
+    label: "Processando",
   },
   {
-    value: PaymentStatus.expired,
-    label: "Vencido",
+    value: PaymentStatus.refunded,
+    label: "Reembolso",
   },
   {
     value: PaymentStatus.paid,
     label: "Pago",
   },
   {
-    value: PaymentStatus.pending,
-    label: "Pendente",
+    value: PaymentStatus.canceled,
+    label: "Cancelado",
   },
 ];
 

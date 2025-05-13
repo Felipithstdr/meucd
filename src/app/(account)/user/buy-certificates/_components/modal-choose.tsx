@@ -79,10 +79,10 @@ const ModalChoose = ({ params }: PropsModal) => {
     onClose(true);
     setIsLoadingPay(true);
     // Extrai o subscriptionId da resposta
-    const { invoiceUrl } = await res.json();
+    const { link } = await res.json();
 
     setIsLoadingPay(false);
-    window.open(invoiceUrl, "_self");
+    window.open(link, "_blank");
     return;
   };
 

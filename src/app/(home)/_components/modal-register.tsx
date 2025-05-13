@@ -12,12 +12,14 @@ import {
   useDisclosure,
 } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdPix } from "react-icons/md";
 import { useHookFormMask } from "use-mask-input";
 import { z } from "zod";
 
 import Modal from "@/components/modal";
+import ModalQrCode from "@/components/modal-qrcode";
 import { formatCpf } from "@/helpers/mask";
 import { isValidCpf } from "@/helpers/validations";
 
@@ -78,7 +80,14 @@ type FormCustomerProps = z.infer<typeof formCustomerSchema>;
 
 const ModalRegister = ({ params }: PropsModal) => {
   const { open, change } = params;
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: openPix,
+    onOpen: onOpenPix,
+    onOpenChange: changePix,
+    onClose: closePix,
+  } = useDisclosure();
+  const [qrcode, setQrcode] = useState("");
 
   // Para o formulário de cliente
   const {
@@ -140,17 +149,29 @@ const ModalRegister = ({ params }: PropsModal) => {
     }
 
     reset();
-    onClose();
+    params.onClose(true);
 
     // Extrai o URL da resposta
-    const { link } = await res.json();
+    const { emv_payload } = await res.json();
 
-    window.open(link, "_self");
+    setQrcode(emv_payload);
+    onOpenPix();
+    // window.open(link, "_blank");
     return;
   };
 
   return (
     <>
+      {qrcode && (
+        <ModalQrCode
+          params={{
+            open: openPix,
+            change: changePix,
+            onClose: closePix,
+            emvPayload: qrcode,
+          }}
+        />
+      )}
       <Modal
         params={{
           title: "Registro de dados",

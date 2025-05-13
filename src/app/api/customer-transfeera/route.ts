@@ -1,4 +1,4 @@
-import { addDays, format } from "date-fns";
+import { addDays, format, startOfToday } from "date-fns";
 import { NextResponse } from "next/server";
 
 import { createCustomer } from "@/action/customer/insert";
@@ -13,8 +13,8 @@ export async function POST(req: Request) {
 
   const api_pay =
     process.env.NODE_ENV === "development"
-      ? `${process.env.URL_TRANSFEERA_DESENV}/payment_links`
-      : `${process.env.URL_TRANSFEERA_PROD}/payment_links`;
+      ? `${process.env.URL_TRANSFEERA_DESENV}/charges`
+      : `${process.env.URL_TRANSFEERA_PROD}/charges`;
 
   const client_id =
     process.env.NODE_ENV === "development"
@@ -25,6 +25,11 @@ export async function POST(req: Request) {
     process.env.NODE_ENV === "development"
       ? process.env.CLIENT_SECRET_TRANSFEERA_DESENV
       : process.env.CLIENT_SECRET_TRANSFEERA_PROD;
+
+  const pix_key =
+    process.env.NODE_ENV === "development"
+      ? process.env.PIX_DESENV
+      : process.env.PIX_PROD;
 
   try {
     const data = await req.json();
@@ -89,10 +94,17 @@ export async function POST(req: Request) {
 
     const totalPrice = calculateDiscount(data.price, data.quantity);
 
-    const expires_at = format(
-      addDays(new Date(), 2),
-      "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-    );
+    // const expires_at = format(
+    //   addDays(new Date(), 2),
+    //   "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+    // );
+
+    const today = startOfToday();
+    const invoiceDate = addDays(today, 2);
+
+    // Formatar a data no formato desejado
+    const due_date = format(today, "yyyy-MM-dd");
+    const expiration_date = format(invoiceDate, "yyyy-MM-dd");
 
     const options_pay = {
       method: "POST",
@@ -103,31 +115,38 @@ export async function POST(req: Request) {
         "User-Agent": "URBE.PAY (backoffice@iroll.com.br)",
       },
       body: JSON.stringify({
+        payment_method_details: {
+          pix: {
+            pix_key,
+          },
+        },
+        payer: {
+          name: data.name,
+          tax_id: format_cpf,
+        },
         payment_methods: ["pix"],
-        description: `Certificado ${data.description}`,
         amount: totalPrice.totalWithDiscount,
-        name: data.name,
-        expires_at,
+        due_date,
+        expiration_date,
+        description: `Certificado ${data.description}`,
       }),
     };
 
     const res_once = await fetch(api_pay, options_pay);
-    console.log(res_once);
 
     const dataPay = await res_once.json();
-    console.log(dataPay);
+    console.log(dataPay.receivables[0].id);
 
-    if (customer.success) {
+    if (customer.success && dataPay.receivables[0].id) {
       await createdPayment({
         customerId: customer.success.id,
-        paymentCode: dataPay.id,
+        paymentCode: dataPay.receivables[0].id,
         serviceId: data.serviceId,
         quantity: data.quantity,
-        status: "pending",
       });
     }
 
-    return NextResponse.json(dataPay, { status: 200 });
+    return NextResponse.json(dataPay.receivables[0].qrcode, { status: 200 });
   } catch (error) {
     console.log("Erro ao chamar a API do Transfeera:", error);
     return new NextResponse(null, {

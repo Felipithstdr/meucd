@@ -98,7 +98,7 @@ const User = ({ customer, formDataToRender }: CustomerProps) => {
       <div className="grid gap-4 sm:grid-cols-2">
         {formDataToRender.length > 0 ? (
           formDataToRender.map(({ serviceId, remaining }) => (
-            <Card key={serviceId} className="bg-white bg-opacity-5" shadow="sm">
+            <Card key={serviceId} className="bg-white" shadow="sm">
               <CardHeader className="flex-row items-center gap-4">
                 <p className="text-neutral-600 dark:text-black">
                   Associar {serviceId === 1 ? "CPF" : "CNPJ"} ao seu certificado

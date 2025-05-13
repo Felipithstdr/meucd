@@ -52,6 +52,8 @@ interface Props {
       | "full"
       | undefined;
     extraButtons?: ButtonProps[];
+    isKeyboard?: boolean;
+    isDismissable?: boolean;
   };
 }
 
@@ -62,6 +64,8 @@ const ModalDynamic = ({ params }: Props) => {
       onOpenChange={params.change}
       placement="center"
       size={params.size}
+      isDismissable={params.isDismissable}
+      isKeyboardDismissDisabled={params.isKeyboard}
     >
       <ModalContent>
         {(onClose) => (

@@ -3,9 +3,11 @@ import { PaymentStatus } from "@prisma/client";
 const getCustomerStatusPay = (paymentStatus: PaymentStatus) => {
   return {
     [PaymentStatus.paid]: "Pago",
-    [PaymentStatus.pending]: "Pendente",
-    [PaymentStatus.expired]: "Vencido",
-    [PaymentStatus.waiting_payment]: "Aguardando",
+    [PaymentStatus.processing]: "Processando",
+    [PaymentStatus.refunded]: "Vencido",
+    [PaymentStatus.created]: "Criado",
+    [PaymentStatus.canceling]: "Cancelando",
+    [PaymentStatus.canceled]: "Cancelado",
   }[paymentStatus];
 };
 

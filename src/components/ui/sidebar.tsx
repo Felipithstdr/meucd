@@ -2,7 +2,7 @@
 
 import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";
-import { PanelLeftIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -54,7 +54,7 @@ function useSidebar() {
 }
 
 function SidebarProvider({
-  defaultOpen = true,
+  defaultOpen = false, //deixar fechado automatico
   open: openProp,
   onOpenChange: setOpenProp,
   className,
@@ -199,7 +199,14 @@ function Sidebar({
             <SheetTitle>Sidebar</SheetTitle>
             <SheetDescription>Displays the mobile sidebar.</SheetDescription>
           </SheetHeader>
-          <div className="flex h-full w-full flex-col">{children}</div>
+          <div
+            className="flex h-full w-full flex-col"
+            onClick={() => {
+              setOpenMobile(false);
+            }}
+          >
+            {children}
+          </div>
         </SheetContent>
       </Sheet>
     );
@@ -258,7 +265,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, state } = useSidebar();
 
   return (
     <Button
@@ -273,7 +280,13 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      {/* // Mudar icone e animacao do icone */}
+      <ChevronRight
+        className={cn(
+          "transition-transform duration-300",
+          state === "expanded" ? "rotate-180" : "rotate-0",
+        )}
+      />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

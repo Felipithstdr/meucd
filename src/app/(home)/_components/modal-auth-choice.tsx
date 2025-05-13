@@ -51,7 +51,10 @@ const ModalAuthChoice = ({ params }: PropsModal) => {
                 <Button
                   type="button"
                   className="w-full cursor-pointer rounded-2xl border bg-gray-100 px-6 py-3 text-gray-800 shadow transition hover:bg-gray-200 sm:w-48 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
-                  onClick={onOpen}
+                  onClick={() => {
+                    params.onClose(true);
+                    onOpen();
+                  }}
                 >
                   Criar Conta
                 </Button>

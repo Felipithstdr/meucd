@@ -14,6 +14,8 @@ declare namespace NodeJS {
     CLIENT_SECRET_TRANSFEERA_PROD: string;
     URL_TRANS_LOGIN_PROD: string;
     URL_TRANSFEERA_PROD: string;
+    PIX_DESENV: string;
+    PIX_PROD: string;
     //jwt
     JWT_SECRET: string;
     //next-auth
@@ -28,7 +30,7 @@ declare namespace NodeJS {
     MAIL_USER: string;
     MAIL_PASSWORD: string;
     //webhook n8n
-    WEBHOOK_NEW_CUSTOMER: string;
+    WH_TUTORIAL: string;
     SEND_MESSAGE_CERTIFIER: string;
     WEBHOOK_INFO_REQUIREMENT: string;
   }

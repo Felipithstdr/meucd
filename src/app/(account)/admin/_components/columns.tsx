@@ -67,8 +67,8 @@ const ActionsCell = ({ row }: { row: { original: Customer } }) => {
 
 const paySatusColor = (status: PaymentStatus) => {
   if (status === "paid") return "bg-lime-400 font-bold text-base";
-  if (status === "pending") return "bg-yellow-300 font-bold text-base";
-  if (status === "expired") return "bg-orange-400";
+  if (status === "created") return "bg-yellow-300 font-bold text-base";
+  if (status === "refunded") return "bg-orange-400";
   return "bg-red-500";
 };
 
