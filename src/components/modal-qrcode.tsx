@@ -20,9 +20,7 @@ const ModalQrCode = ({ params }: PropsModal) => {
   const { open, change, emvPayload } = params;
 
   const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(emvPayload).then(() => {
-      alert("Pix Copia e Cola copiado para a área de transferência!");
-    });
+    navigator.clipboard.writeText(emvPayload);
   };
 
   return (
@@ -55,7 +53,7 @@ const ModalQrCode = ({ params }: PropsModal) => {
               </Button>
             </div>
             <p className="mt-4 text-sm text-gray-700 dark:text-gray-300">
-              * Ao finalizar o pagamento nossa assistente Anina, entrará em
+              * Ao finalizar o pagamento, nossa assistente Anina entrará em
               contato para mais informações!
             </p>
           </div>

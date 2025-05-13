@@ -156,7 +156,7 @@ const ModalRegister = ({ params }: PropsModal) => {
 
     setQrcode(emv_payload);
     onOpenPix();
-    // window.open(link, "_blank");
+
     return;
   };
 

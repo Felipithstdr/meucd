@@ -135,7 +135,6 @@ export async function POST(req: Request) {
     const res_once = await fetch(api_pay, options_pay);
 
     const dataPay = await res_once.json();
-    console.log(dataPay.receivables[0].id);
 
     if (customer.success && dataPay.receivables[0].id) {
       await createdPayment({

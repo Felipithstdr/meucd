@@ -5,7 +5,6 @@ import { PaymentMethod, PaymentStatus } from "@prisma/client";
 import db from "@/lib/prisma";
 
 interface PaymentData {
-  customerId?: string;
   paymentCode?: string;
   paymentMethod?: string;
   event?: string;
@@ -41,12 +40,9 @@ export const updatePayment = async (paymentData: PaymentData) => {
       updateData.paymentCode = paymentData.paymentCode;
     }
 
-    const pay = await db.payment.updateMany({
+    const pay = await db.payment.update({
       where: {
-        OR: [
-          { paymentCode: paymentData.paymentCode },
-          { customerId: paymentData.customerId },
-        ],
+        paymentCode: paymentData.paymentCode,
       },
       data: updateData,
     });

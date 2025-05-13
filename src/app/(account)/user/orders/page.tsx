@@ -22,8 +22,6 @@ const OrderPage = async () => {
     },
   });
 
-  console.log(orders);
-
   return <Orders payments={orders} />;
 };
 

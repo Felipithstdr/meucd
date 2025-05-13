@@ -1,21 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { updatePayment } from "@/action/payment/update";
+import db from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    console.log(body);
+
     const { amount, id, status, payment_methods } = body?.data || {};
 
     // const netValue = Math.round(((amount - amount * 0.009) / 100) * 100) / 100;
 
-    await updatePayment({
+    const payment = await updatePayment({
       paymentCode: id,
       event: status,
       paymentMethod: payment_methods[0],
       netValue: amount,
     });
+
+    if (status === "paid") {
+      const customer = await db.customer.findUnique({
+        where: {
+          id: payment.data?.customerId,
+        },
+      });
+      // Adicionar chamada ao webhook com dados do cliente
+      const apiUrl = `${process.env.WH_TUTORIAL}`;
+      try {
+        await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            customer: customer?.name,
+            number: customer?.cellPhone,
+          }),
+        });
+      } catch (error) {
+        console.error("Erro ao enviar mensagem a certificadora:", error);
+      }
+    }
 
     return NextResponse.json({ received: true });
   } catch (error) {
