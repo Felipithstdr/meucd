@@ -12,8 +12,8 @@ export async function POST(req: Request) {
 
   const api_pay =
     process.env.NODE_ENV === "development"
-      ? `${process.env.URL_TRANSFEERA_DESENV}/pix/qrcode/static`
-      : `${process.env.URL_TRANSFEERA_PROD}/pix/qrcode/static`;
+      ? `${process.env.URL_TRANSFEERA_DESENV}/pix/qrcode/collection/immediate`
+      : `${process.env.URL_TRANSFEERA_PROD}/pix/qrcode/collection/immediate`;
 
   const client_id =
     process.env.NODE_ENV === "development"
@@ -102,10 +102,14 @@ export async function POST(req: Request) {
         "User-Agent": "URBE.PAY (backoffice@iroll.com.br)",
       },
       body: JSON.stringify({
+        payer: { name: data.name, document: format_cpf },
+        expiration: 86400,
+        value_change_mode: "VALOR_FIXADO",
         integration_id: customer.success?.id ?? "",
         pix_key,
-        value: totalPrice.totalWithDiscount,
-        additional_info: `Certificado ${data.description}`,
+        original_value: totalPrice.totalWithDiscount,
+        payer_question: `Certificado ${data.description}`,
+        reject_unknown_payer: false,
       }),
     };
 
