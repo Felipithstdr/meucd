@@ -10,6 +10,9 @@ export async function POST(request: NextRequest) {
     console.log(body);
 
     const { value, id, integration_id } = body?.data || {};
+    console.log(body.data);
+    console.log(body.data.id);
+    console.log(integration_id);
 
     // const netValue = Math.round(((amount - amount * 0.009) / 100) * 100) / 100;
 
