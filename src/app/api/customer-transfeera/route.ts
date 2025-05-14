@@ -1,4 +1,3 @@
-import { addDays, format, startOfToday } from "date-fns";
 import { NextResponse } from "next/server";
 
 import { createCustomer } from "@/action/customer/insert";
@@ -13,8 +12,8 @@ export async function POST(req: Request) {
 
   const api_pay =
     process.env.NODE_ENV === "development"
-      ? `${process.env.URL_TRANSFEERA_DESENV}/charges`
-      : `${process.env.URL_TRANSFEERA_PROD}/charges`;
+      ? `${process.env.URL_TRANSFEERA_DESENV}/pix/qrcode/static`
+      : `${process.env.URL_TRANSFEERA_PROD}/pix/qrcode/static`;
 
   const client_id =
     process.env.NODE_ENV === "development"
@@ -94,18 +93,6 @@ export async function POST(req: Request) {
 
     const totalPrice = calculateDiscount(data.price, data.quantity);
 
-    // const expires_at = format(
-    //   addDays(new Date(), 2),
-    //   "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-    // );
-
-    const today = startOfToday();
-    const invoiceDate = addDays(today, 2);
-
-    // Formatar a data no formato desejado
-    const due_date = format(today, "yyyy-MM-dd");
-    const expiration_date = format(invoiceDate, "yyyy-MM-dd");
-
     const options_pay = {
       method: "POST",
       headers: {
@@ -115,37 +102,28 @@ export async function POST(req: Request) {
         "User-Agent": "URBE.PAY (backoffice@iroll.com.br)",
       },
       body: JSON.stringify({
-        payment_method_details: {
-          pix: {
-            pix_key,
-          },
-        },
-        payer: {
-          name: data.name,
-          tax_id: format_cpf,
-        },
-        payment_methods: ["pix"],
-        amount: totalPrice.totalWithDiscount,
-        due_date,
-        expiration_date,
-        description: `Certificado ${data.description}`,
+        integration_id: customer.success?.id ?? "",
+        pix_key,
+        value: totalPrice.totalWithDiscount,
+        additional_info: `Certificado ${data.description}`,
       }),
     };
 
     const res_once = await fetch(api_pay, options_pay);
 
     const dataPay = await res_once.json();
+    console.log(dataPay);
 
-    if (customer.success && dataPay.receivables[0].id) {
+    if (customer.success && dataPay.id) {
       await createdPayment({
         customerId: customer.success.id,
-        paymentCode: dataPay.receivables[0].id,
+        paymentCode: dataPay.id,
         serviceId: data.serviceId,
         quantity: data.quantity,
       });
     }
 
-    return NextResponse.json(dataPay.receivables[0].qrcode, { status: 200 });
+    return NextResponse.json(dataPay, { status: 200 });
   } catch (error) {
     console.log("Erro ao chamar a API do Transfeera:", error);
     return new NextResponse(null, {
@@ -170,9 +148,9 @@ const calculateDiscount = (unitPrice: number, quantity: number) => {
   // Calcula o preço com desconto
   const totalWithoutDiscount = unitPrice * quantity;
   const discountAmount = totalWithoutDiscount * (discountPercentage / 100);
-  const total = totalWithoutDiscount - discountAmount;
+  const totalWithDiscount = totalWithoutDiscount - discountAmount;
 
-  const totalWithDiscount = Math.round(total * 100);
+  // const totalWithDiscount = Math.round(total * 100);
 
   return {
     totalWithDiscount,
