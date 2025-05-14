@@ -9,18 +9,18 @@ export async function POST(request: NextRequest) {
 
     console.log(body);
 
-    const { amount, id, status, payment_methods } = body?.data || {};
+    const { value, id, integration_id } = body?.data || {};
 
     // const netValue = Math.round(((amount - amount * 0.009) / 100) * 100) / 100;
 
     const payment = await updatePayment({
       paymentCode: id,
-      event: status,
-      paymentMethod: payment_methods[0],
-      netValue: amount,
+      event: "paid",
+      paymentMethod: "pix",
+      netValue: value,
     });
 
-    if (status === "paid") {
+    if (integration_id) {
       const customer = await db.customer.findUnique({
         where: {
           id: payment.data?.customerId,
