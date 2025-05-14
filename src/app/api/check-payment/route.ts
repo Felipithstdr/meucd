@@ -9,21 +9,21 @@ export async function POST(request: NextRequest) {
 
     console.log(body);
 
-    const { value, id, integration_id } = body?.data || {};
-    console.log(body.data);
-    console.log(body.data.id);
-    console.log(integration_id);
+    const { value, txid } = body?.data || {};
+    console.log(body.data.txid);
 
     // const netValue = Math.round(((amount - amount * 0.009) / 100) * 100) / 100;
 
     const payment = await updatePayment({
-      paymentCode: id,
+      paymentCode: txid,
       event: "paid",
       paymentMethod: "pix",
       netValue: value,
     });
 
-    if (integration_id) {
+    console.log(payment);
+
+    if (txid) {
       const customer = await db.customer.findUnique({
         where: {
           id: payment.data?.customerId,

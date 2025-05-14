@@ -121,7 +121,7 @@ export async function POST(req: Request) {
     if (customer.success && dataPay.id) {
       await createdPayment({
         customerId: customer.success.id,
-        paymentCode: dataPay.id,
+        paymentCode: dataPay.txid,
         serviceId: data.serviceId,
         quantity: data.quantity,
       });
