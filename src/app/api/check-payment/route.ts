@@ -7,10 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    console.log(body);
-
     const { value, txid } = body?.data || {};
-    console.log(body.data.txid);
 
     // const netValue = Math.round(((amount - amount * 0.009) / 100) * 100) / 100;
 
@@ -21,7 +18,7 @@ export async function POST(request: NextRequest) {
       netValue: value,
     });
 
-    console.log(payment);
+    console.log(txid);
 
     if (txid) {
       const customer = await db.customer.findUnique({
@@ -29,8 +26,13 @@ export async function POST(request: NextRequest) {
           id: payment.data?.customerId,
         },
       });
+
+      console.log(customer);
+
       // Adicionar chamada ao webhook com dados do cliente
       const apiUrl = `${process.env.WH_TUTORIAL}`;
+      console.log(apiUrl);
+
       try {
         await fetch(apiUrl, {
           method: "POST",
@@ -39,7 +41,7 @@ export async function POST(request: NextRequest) {
           },
           body: JSON.stringify({
             customer: customer?.name,
-            number: customer?.cellPhone,
+            cellPhone: customer?.cellPhone,
           }),
         });
       } catch (error) {
