@@ -13,7 +13,7 @@ const AdminPage = async () => {
         length={users.users.length}
         titleFound="Clientes"
         placeholder="Buscar Nome/CPF..."
-        filterableColumns={["name", "cpf"]}
+        filterableColumns={["customer_name", "customer_cpf"]}
       />
     </div>
   );
