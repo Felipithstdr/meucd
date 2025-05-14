@@ -153,8 +153,6 @@ const calculateDiscount = (unitPrice: number, quantity: number) => {
   const discountAmount = totalWithoutDiscount * (discountPercentage / 100);
   const totalWithDiscount = totalWithoutDiscount - discountAmount;
 
-  // const totalWithDiscount = Math.round(total * 100);
-
   return {
     totalWithDiscount,
   };

@@ -18,8 +18,6 @@ export async function POST(request: NextRequest) {
       netValue: value,
     });
 
-    console.log(txid);
-
     if (txid) {
       const customer = await db.customer.findUnique({
         where: {
@@ -27,11 +25,8 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      console.log(customer);
-
       // Adicionar chamada ao webhook com dados do cliente
       const apiUrl = `${process.env.WH_TUTORIAL}`;
-      console.log(apiUrl);
 
       try {
         await fetch(apiUrl, {

@@ -1,6 +1,12 @@
 "use client";
 
-import { addToast, Button, Select, SelectItem, Spinner } from "@heroui/react";
+import {
+  addToast,
+  Button,
+  Select,
+  SelectItem,
+  useDisclosure,
+} from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -9,6 +15,7 @@ import { MdPix } from "react-icons/md";
 import { z } from "zod";
 
 import Modal from "@/components/modal";
+import ModalQrCode from "@/components/modal-qrcode";
 
 interface PropsModal {
   params: {
@@ -30,7 +37,13 @@ type FormCertificateProps = z.infer<typeof formCertificateSchema>;
 const ModalChoose = ({ params }: PropsModal) => {
   const { open, change, onClose } = params;
   const { data: user } = useSession();
-  const [isLoadingPay, setIsLoadingPay] = useState(false);
+  const [qrcode, setQrcode] = useState("");
+  const {
+    isOpen: openPix,
+    onOpen: onOpenPix,
+    onOpenChange: changePix,
+    onClose: closePix,
+  } = useDisclosure();
 
   // Para o formulário de cliente
   const {
@@ -77,28 +90,25 @@ const ModalChoose = ({ params }: PropsModal) => {
       return;
     }
     onClose(true);
-    setIsLoadingPay(true);
-    // Extrai o subscriptionId da resposta
-    const { link } = await res.json();
 
-    setIsLoadingPay(false);
-    window.open(link, "_blank");
+    const { emv_payload } = await res.json();
+    setQrcode(emv_payload);
+    onOpenPix();
+
     return;
   };
 
   return (
     <>
-      {isLoadingPay && (
-        <div className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-white bg-opacity-50 opacity-75">
-          <div className="flex flex-col items-center justify-center">
-            <Spinner
-              classNames={{ label: "text-foreground mt-4" }}
-              color="success"
-              label="Aguarde..."
-              variant="gradient"
-            />
-          </div>
-        </div>
+      {qrcode && (
+        <ModalQrCode
+          params={{
+            open: openPix,
+            change: changePix,
+            onClose: closePix,
+            emvPayload: qrcode,
+          }}
+        />
       )}
 
       <Modal
