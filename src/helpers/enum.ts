@@ -5,9 +5,10 @@ const getCustomerStatusPay = (paymentStatus: PaymentStatus) => {
     [PaymentStatus.paid]: "Pago",
     [PaymentStatus.processing]: "Processando",
     [PaymentStatus.refunded]: "Vencido",
-    [PaymentStatus.created]: "Criado",
+    [PaymentStatus.created]: "Pendente",
     [PaymentStatus.canceling]: "Cancelando",
     [PaymentStatus.canceled]: "Cancelado",
+    [PaymentStatus.transfer]: "Transferência",
   }[paymentStatus];
 };
 

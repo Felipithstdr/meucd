@@ -34,7 +34,7 @@ export default function AccountLayout({
       >
         <ThemeProvider attribute="class" enableSystem disableTransitionOnChange>
           <AuthProvider>
-            <div className="flex h-full flex-col overflow-hidden">
+            <div className="flex h-full flex-col sm:overflow-hidden">
               <Sidebar>{children}</Sidebar>
             </div>
             <Toast />

@@ -21,6 +21,7 @@ export default function NavLinks() {
     "buy-certificates": "Comprar Certificados",
     orders: "Pedidos",
     certificates: "Certificados",
+    payments: "Pagamentos",
   };
 
   return (

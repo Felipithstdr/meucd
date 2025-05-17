@@ -151,10 +151,9 @@
   * {
     @apply border-border outline-ring/50;
   }
-  html {
-    @apply h-full;
-  }
-  body {
-    @apply bg-background text-foreground h-full;
+
+  html, body {
+    @apply min-h-screen;
+    @apply bg-background text-foreground;
   }
 }
