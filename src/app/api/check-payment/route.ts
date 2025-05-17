@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { updatePayment } from "@/action/payment/update";
+import { insertPaySplit } from "@/action/paymentSplit/insert";
 import db from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
@@ -39,8 +40,23 @@ export async function POST(request: NextRequest) {
             cellPhone: customer?.cellPhone,
           }),
         });
+
+        if (payment.data) {
+          const valueCertificate = payment.data.serviceId === 1 ? 70 : 90
+
+          const expense = valueCertificate * payment.data.quantity
+          
+          const revenue = (payment.data.totalAmount ?? 0) - expense;
+        
+          await insertPaySplit({
+            paymentId: payment.data.id,
+            amount: revenue,
+            type: "COMPANY",
+          });
+        }
+
       } catch (error) {
-        console.error("Erro ao enviar mensagem a certificadora:", error);
+        console.error("Erro ao enviar mensagem ao cliente:", error);
       }
     }
 
