@@ -2,14 +2,15 @@
 
 import { Divider } from "@heroui/react";
 import {
+  BanknoteArrowUp,
   FileKey,
   Home,
+  LayoutDashboard,
   ListOrdered,
   LogOutIcon,
   ShieldCheck,
   TicketPercent,
-  UserRound,
-} from "lucide-react";
+  UserRound} from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import * as React from "react";
 
@@ -57,6 +58,16 @@ const dataSidebar = {
   ],
 
   adminItems: [
+    {
+      title: "Dashboard",
+      url: "/admin/dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "Pagamentos",
+      url: "/admin/payments",
+      icon: BanknoteArrowUp,
+    },
     {
       title: "Cupom",
       url: "/admin/coupon",

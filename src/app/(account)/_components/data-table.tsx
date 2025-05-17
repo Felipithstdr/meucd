@@ -78,8 +78,6 @@ export function DataTable<TData, TValue>({
   filter1,
   name_btn,
 }: DataTableProps<TData, TValue>) {
-  // console.log(columns);
-
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
@@ -98,13 +96,13 @@ export function DataTable<TData, TValue>({
     (filterableColumns: string[]) =>
     <TData,>(
       row: Row<TData>,
-      _columnId: string, // obrigatoriamente presente mas não usado!
+      _columnId: string,
       filterValue: string,
     ) =>
       filterableColumns.some((columnId) => {
         console.log(_columnId);
 
-        const value = row.getValue(columnId); // columnId é string!
+        const value = row.getValue(columnId);
         return String(value ?? "")
           .toLowerCase()
           .includes(filterValue.toLowerCase());

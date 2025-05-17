@@ -1,116 +1,51 @@
 "use client";
 
-import { Chip, useDisclosure } from "@heroui/react";
-import { PaymentStatus, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Eye } from "lucide-react";
-import { useState } from "react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
-import { Button } from "@/components/ui/button";
-import { getCustomerStatusPay } from "@/helpers/enum";
+import { formatCellPhone } from "@/helpers/mask";
 
-import ModalViewCustomer from "./modal-view-customer";
 
-export type Customer = Prisma.PaymentGetPayload<{
-  include: {
-    service: true;
-    customer: {
-      omit: {
-        password: true;
-        token: true;
-        agreedToTerms: true;
-      };
-    };
-  };
-}>;
-const ActionsCell = ({ row }: { row: { original: Customer } }) => {
-  const paymentCode = row.original.paymentCode;
-
-  const {
-    isOpen: isOpenView,
-    onOpen: onOpenView,
-    onOpenChange: onOpenChangeView,
-  } = useDisclosure();
-
-  const [customerView, setCustomerView] = useState<string>();
-
-  const modalView = (id: string) => {
-    setCustomerView(id);
-  };
-
-  return (
-    <>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => {
-          onOpenView();
-          modalView(paymentCode);
-        }}
-        className="cursor-pointer dark:bg-[#101828] dark:hover:bg-blue-900"
-      >
-        <Eye className="dark:text-white" />
-      </Button>
-
-      {customerView && (
-        <ModalViewCustomer
-          params={{
-            paymentCode: customerView,
-            open: isOpenView,
-            change: onOpenChangeView,
-          }}
-        />
-      )}
-    </>
-  );
-};
-
-const paySatusColor = (status: PaymentStatus) => {
-  if (status === "paid") return "bg-lime-400 font-bold text-base";
-  if (status === "created") return "bg-yellow-300 font-bold text-base";
-  if (status === "refunded") return "bg-orange-400";
-  return "bg-red-500";
-};
+export type Customer = Prisma.CustomerGetPayload<{
+  omit:{
+    password: true;
+    token: true;
+    agreedToTerms: true
+  }
+}>
 
 export const columns: ColumnDef<Customer>[] = [
   {
-    accessorKey: "customer.name",
+    accessorKey: "name",
     header: "Nome",
   },
   {
-    accessorKey: "customer.cpf",
+    accessorKey: "cpf",
     header: "CPF",
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "email",
+    header: "E-mail",
+  },
+  {
+    accessorKey: "cellPhone",
+    header: "Celular",
     cell: ({ row }) => {
-      const paymentStatus = row.original.status as PaymentStatus;
+      const cellPhone = row.original.cellPhone;
 
-      const colorClassName = paySatusColor(paymentStatus);
-
-      return (
-        <div>
-          <Chip className={`capitalize ${colorClassName}`}>
-            {getCustomerStatusPay(paymentStatus)}
-          </Chip>
-        </div>
-      );
+      return <span>{formatCellPhone(cellPhone)}</span>;
     },
   },
   {
-    accessorKey: "servico",
-    header: "Serviço",
+    accessorKey: "createdAt",
+    header: "Criado Em",
     cell: ({ row }) => {
-      const service = row.original.service.name;
-
-      return <span>{service}</span>;
+      const date = row.original.createdAt;
+      const formattedDate = format(new Date(date), 'dd/MM/yyyy', { locale: ptBR });
+  
+      return <span>{formattedDate}</span>;
     },
-  },
-  {
-    id: "acoes",
-    header: "Detalhes",
-    enableHiding: false,
-    cell: ActionsCell,
   },
 ];

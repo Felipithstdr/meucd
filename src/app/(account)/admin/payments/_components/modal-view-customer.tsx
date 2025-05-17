@@ -6,7 +6,8 @@ import Modal from "@/components/modal";
 import { formatCellPhone, formatCurrency } from "@/helpers/mask";
 import { useFetch } from "@/hooks/use-fetch";
 
-import { PAYMENT_METHOD_LABELS } from "../_constants/payment";
+import { PAYMENT_METHOD_LABELS } from "../../_constants/payment";
+
 
 interface PropsModal {
   params: {
@@ -94,7 +95,7 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
                         {/* Data de criação */}
                         <div className="flex items-center gap-2">
                           <span className="text-foreground/90 font-bold">
-                            Data de criação:
+                            Criado em:
                           </span>
                           <span className="text-foreground/90">
                             {format(
@@ -113,25 +114,45 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
                       Pagamento
                     </legend>
                     <div className="flex flex-col gap-2">
-                      <div className="flex flex-row items-center gap-2">
-                        <span className="text-foreground/90 font-bold">
+                      <div className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
+                        <div className="flex items-center gap-2">
+                          <span className="text-foreground/90 font-bold">
                           Método de pagamento:
-                        </span>
-                        <span className="text-foreground/90">
+                          </span>
+                          <span className="text-foreground/90">
                           {customer.paymentMethod
                             ? PAYMENT_METHOD_LABELS[
                                 customer.paymentMethod as PaymentMethod
                               ]
                             : "N/A"}
-                        </span>
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-foreground/90 font-bold">
+                            Usou cupom?:
+                          </span>
+                          <span className="text-foreground/90">
+                          {customer.couponId ? "Sim" : "Não"}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex flex-row items-center gap-2">
-                        <span className="text-foreground/90 font-bold">
-                          Valor pago:
-                        </span>
-                        <span className="text-foreground/90">
-                          {formatCurrency(customer.totalAmount ?? 0)}
-                        </span>
+                      <div className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
+                        <div className="flex items-center gap-2">
+                          <span className="text-foreground/90 font-bold">
+                            Valor pago:
+                          </span>
+                          <span className="text-foreground/90">
+                            {formatCurrency(customer.totalAmount ?? 0)}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-foreground/90 font-bold">
+                            Quantidade:
+                          </span>
+                          <span className="text-foreground/90">
+                            {customer.quantity ?? 0}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </fieldset>
