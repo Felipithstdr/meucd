@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // Garante que SEMPRE busque os dados do banco
+
 import { DataTable } from "../../_components/data-table";
 import { columns } from "./_components/columns";
 import { getPayment } from "./_data/getPayment";
