@@ -35,16 +35,11 @@ interface SplitProps {
   month: string;
 }
 
-export const SplitPieChart = ({
-  monthlyNetProfit,
-  month,
-}: SplitProps) => {
- 
+export const SplitPieChart = ({ monthlyNetProfit, month }: SplitProps) => {
   const profitSplit = {
     personX: 0.3333,
     personY: 0.3333,
   };
-
 
   const chartData = [
     {
@@ -68,7 +63,10 @@ export const SplitPieChart = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1">
-        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto aspect-square max-h-[250px]"
+        >
           <PieChart>
             <ChartTooltip
               cursor={false}
@@ -77,10 +75,14 @@ export const SplitPieChart = ({
                 const data = payload[0].payload;
                 const key = data.type as keyof typeof chartConfig;
                 return (
-                  <div className="bg-white p-2 rounded shadow">
+                  <div className="rounded bg-white p-2 shadow">
                     <div>{chartConfig[key].label}</div>
                     <div>
-                      R$ {data.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      R${" "}
+                      {data.amount.toLocaleString("pt-BR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </div>
                   </div>
                 );
@@ -93,7 +95,10 @@ export const SplitPieChart = ({
               innerRadius={60}
               strokeWidth={5}
               activeIndex={0}
-              activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (
+              activeShape={({
+                outerRadius = 0,
+                ...props
+              }: PieSectorDataItem) => (
                 <Sector {...props} outerRadius={outerRadius + 10} />
               )}
             />
@@ -104,10 +109,18 @@ export const SplitPieChart = ({
           {Object.entries(profitSplit).map(([key, percent]) => (
             <PercentageItem
               key={key}
-              icon={<div className="w-4 h-4 rounded-full" style={{ backgroundColor: chartConfig[key as keyof typeof chartConfig].color }} />}
+              icon={
+                <div
+                  className="h-4 w-4 rounded-full"
+                  style={{
+                    backgroundColor:
+                      chartConfig[key as keyof typeof chartConfig].color,
+                  }}
+                />
+              }
               title={chartConfig[key as keyof typeof chartConfig].label}
               value={percent * 100}
-              />
+            />
           ))}
         </div>
       </CardContent>
