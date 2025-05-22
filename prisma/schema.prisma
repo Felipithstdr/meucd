@@ -12,7 +12,6 @@ model Service {
   id      Int       @id @default(autoincrement())
   name    String
   amount  Float     @default(0)
-  
   Payment Payment[]
 }
 
@@ -28,7 +27,6 @@ model Customer {
   agreedToTerms       Boolean
   createdAt           DateTime             @default(now())
   updateAt            DateTime             @default(now()) @updatedAt
-
   digitalCertificates DigitalCertificate[]
   payments            Payment[]
 }
@@ -36,17 +34,16 @@ model Customer {
 model DigitalCertificate {
   id             String    @id @default(cuid())
   ecnpj          String?   @unique
-  ecpf           String?   @unique
   cpf            String?
   customerId     String
   expirationDate DateTime?
   isActive       Boolean   @default(false)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @default(now()) @updatedAt
+  ecpf           String?   @unique
   issueCode      String?
   link           String?
   protocol       String?
-
   customer       Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
 }
 
@@ -67,7 +64,6 @@ model Payment {
   Coupon        Coupon?        @relation(fields: [couponId], references: [id])
   customer      Customer       @relation(fields: [customerId], references: [id])
   service       Service        @relation(fields: [serviceId], references: [id])
-
   PaymentSplit  PaymentSplit[]
 }
 
@@ -77,7 +73,6 @@ model PaymentSplit {
   type      SplitReceiverType
   amount    Float
   createdAt DateTime          @default(now())
-
   payment   Payment           @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 }
 
@@ -90,7 +85,6 @@ model Coupon {
   usageLimit    Int?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-
   payments      Payment[]
 }
 
