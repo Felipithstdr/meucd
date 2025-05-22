@@ -1,4 +1,8 @@
-import { PaymentMethod, PaymentStatus, SplitReceiverType } from "@prisma/client";
+import {
+  PaymentMethod,
+  PaymentStatus,
+  SplitReceiverType,
+} from "@prisma/client";
 
 import db from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
@@ -42,7 +46,7 @@ export const getDashboard = async (month?: string) => {
 
   const totalCustomers = Number(await db.customer.count({}));
 
-  const yearlyRevenue = Number(
+  const yearlyNetProfit = Number(
     (
       await db.paymentSplit.aggregate({
         where: {
@@ -50,14 +54,14 @@ export const getDashboard = async (month?: string) => {
             gte: new Date(`${year}-01-01T00:00:00.000Z`), // Início do ano
             lt: new Date(`${year + 1}-01-01T00:00:00.000Z`), // Início do próximo ano
           },
-          type: "COMPANY"
+          type: "COMPANY",
         },
         _sum: { amount: true },
       })
     )?._sum?.amount ?? 0,
   );
 
-  const balanceMonthly = Number(
+  const MonthlyNetProfit = Number(
     (
       await db.paymentSplit.aggregate({
         where,
@@ -66,7 +70,7 @@ export const getDashboard = async (month?: string) => {
     )?._sum?.amount ?? 0,
   );
 
-  const balanceMonthlyeCNPJ = Number(
+  const monthlyBillingeCNPJ = Number(
     (
       await db.payment.aggregate({
         where: {
@@ -76,15 +80,15 @@ export const getDashboard = async (month?: string) => {
           },
           status: "paid",
           service: {
-            name: "eCNPJ"
-          }
+            name: "eCNPJ",
+          },
         },
         _sum: { totalAmount: true },
       })
     )?._sum?.totalAmount ?? 0,
   );
 
-  const balanceMonthlyeCPF = Number(
+  const monthlyBillingeCPF = Number(
     (
       await db.payment.aggregate({
         where: {
@@ -94,15 +98,15 @@ export const getDashboard = async (month?: string) => {
           },
           status: "paid",
           service: {
-            name: "eCPF"
-          }
+            name: "eCPF",
+          },
         },
         _sum: { totalAmount: true },
       })
     )?._sum?.totalAmount ?? 0,
   );
 
-  const balanceMonthlyExpenses = Number(
+  const monthlyOutputs = Number(
     (
       await db.paymentSplit.aggregate({
         where: {
@@ -111,8 +115,8 @@ export const getDashboard = async (month?: string) => {
             lt: new Date(`${year}-${month}-31`),
           },
           type: {
-            not: "COMPANY"
-          }
+            not: "COMPANY",
+          },
         },
         _sum: { amount: true },
       })
@@ -141,13 +145,52 @@ export const getDashboard = async (month?: string) => {
     LIMIT 10;
   `;
 
+  const [totalReceived, totalSplit] = await Promise.all([
+    db.payment
+      .aggregate({
+        where: { status: "paid" },
+        _sum: { totalAmount: true },
+      })
+      .then((res) => Number(res._sum?.totalAmount ?? 0)),
+
+    db.paymentSplit
+      .aggregate({
+        where: {
+          type: {
+            in: ["THIRD_PARTY", "AFFILIATE"],
+          },
+        },
+        _sum: { amount: true },
+      })
+      .then((res) => Number(res._sum?.amount ?? 0)),
+  ]);
+
+  const currentBalance = totalReceived - totalSplit;
+
+  const monthlyNetProfit = Number(
+    (
+      await db.paymentSplit.aggregate({
+        where: {
+          createdAt: {
+            gte: new Date(`${year}-${month}-01`),
+            lt: new Date(`${year}-${month}-31`),
+          },
+          type: "COMPANY",
+        },
+        _sum: { amount: true },
+      })
+    )?._sum?.amount ?? 0,
+  );
+
   return {
     totalCustomers,
-    yearlyRevenue,
-    balanceMonthly,
-    balanceMonthlyeCNPJ,
-    balanceMonthlyeCPF,
+    yearlyNetProfit,
+    MonthlyNetProfit,
+    monthlyBillingeCNPJ,
+    monthlyBillingeCPF,
     lastTransactions,
-    balanceMonthlyExpenses,
+    monthlyOutputs,
+    currentBalance,
+    monthlyNetProfit
   };
 };

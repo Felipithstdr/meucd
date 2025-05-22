@@ -47,7 +47,7 @@ const UserPage = async () => {
   );
 
   customer.digitalCertificates.forEach((cert) => {
-    const type = cert.cpf ? 1 : cert.cnpj ? 2 : null;
+    const type = cert.ecpf ? 1 : cert.ecnpj ? 2 : null;
     if (type && grouped[type]) {
       grouped[type].filled += 1;
     }

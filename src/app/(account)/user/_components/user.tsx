@@ -153,6 +153,19 @@ const User = ({ customer, formDataToRender }: CustomerProps) => {
                   Confira em <span className="italic">“Meus Pedidos”</span>.
                 </span>
               </li>
+              <li>
+                <span className="font-semibold text-blue-600 dark:text-blue-400">
+                  🔹 Quer Renovar seu certificado Digital?
+                </span>
+                <br />
+                <span>
+                  Confira em <span className="italic">“Meus Certificados”</span>.
+                </span>
+                <br />
+                <span>Vá no certificado que deseja e clique em “Renovar”.</span>
+                <br />
+                <span>Faça o pagamento e pronto!</span>
+              </li>
             </ul>
           </div>
         )}

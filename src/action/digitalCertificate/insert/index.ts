@@ -17,8 +17,8 @@ export const createdCD = async (customerData: CustomerData) => {
       await db.digitalCertificate.create({
         data: {
           customerId: customerData.customerId,
-          cpf: customerData.serviceId === 1 ? doc : null,
-          cnpj: customerData.serviceId === 2 ? doc : null,
+          ecpf: customerData.serviceId === 1 ? doc : null,
+          ecnpj: customerData.serviceId === 2 ? doc : null,
         },
       });
     }
