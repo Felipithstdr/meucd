@@ -12,6 +12,7 @@ model Service {
   id      Int       @id @default(autoincrement())
   name    String
   amount  Float     @default(0)
+
   Payment Payment[]
 }
 
@@ -27,6 +28,7 @@ model Customer {
   agreedToTerms       Boolean
   createdAt           DateTime             @default(now())
   updateAt            DateTime             @default(now()) @updatedAt
+
   digitalCertificates DigitalCertificate[]
   payments            Payment[]
 }
@@ -34,16 +36,16 @@ model Customer {
 model DigitalCertificate {
   id             String    @id @default(cuid())
   ecnpj          String?   @unique
-  cpf            String?
+  ecpf           String?   @unique
   customerId     String
   expirationDate DateTime?
   isActive       Boolean   @default(false)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @default(now()) @updatedAt
-  ecpf           String?   @unique
   issueCode      String?
   link           String?
   protocol       String?
+
   customer       Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
 }
 
@@ -61,6 +63,7 @@ model Payment {
   paymentDate   DateTime       @default(now())
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  
   Coupon        Coupon?        @relation(fields: [couponId], references: [id])
   customer      Customer       @relation(fields: [customerId], references: [id])
   service       Service        @relation(fields: [serviceId], references: [id])
@@ -110,6 +113,7 @@ enum PaymentStatus {
   canceling
   canceled
   transfer
+  test
 }
 
 enum PaymentMethod {

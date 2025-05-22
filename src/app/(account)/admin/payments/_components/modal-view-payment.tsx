@@ -30,14 +30,14 @@ export type CustomerProps = Prisma.PaymentGetPayload<{
   };
 }>;
 
-const ModalViewCustomer = ({ params }: PropsModal) => {
+const ModalViewPayment = ({ params }: PropsModal) => {
   const { open, paymentCode, change } = params;
 
-  const { data: customer, isLoading } = useFetch<CustomerProps>(
+  const { data: payment, isLoading } = useFetch<CustomerProps>(
     `${process.env.NEXT_PUBLIC_HOST_URL}/api/customer?paymentCode=${paymentCode}`,
   );
 
-  if (isLoading || !customer) {
+  if (isLoading || !payment) {
     return null;
   }
 
@@ -70,7 +70,7 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
                             Nome:
                           </span>
                           <span className="text-foreground/90">
-                            {customer.customer.name}
+                            {payment.customer.name}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -78,7 +78,7 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
                             Celular:
                           </span>
                           <span className="text-foreground/90">
-                            {formatCellPhone(customer.customer.cellPhone)}
+                            {formatCellPhone(payment.customer.cellPhone)}
                           </span>
                         </div>
                       </div>
@@ -89,7 +89,7 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
                             E-mail:
                           </span>
                           <span className="text-foreground/90">
-                            {customer.customer.email}
+                            {payment.customer.email}
                           </span>
                         </div>
                         {/* Data de criação */}
@@ -99,7 +99,7 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
                           </span>
                           <span className="text-foreground/90">
                             {format(
-                              new Date(customer.customer.createdAt),
+                              new Date(payment.customer.createdAt),
                               "dd/MM/yyyy HH:mm",
                             )}
                           </span>
@@ -120,9 +120,9 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
                           Método de pagamento:
                           </span>
                           <span className="text-foreground/90">
-                          {customer.paymentMethod
+                          {payment.paymentMethod
                             ? PAYMENT_METHOD_LABELS[
-                                customer.paymentMethod as PaymentMethod
+                              payment.paymentMethod as PaymentMethod
                               ]
                             : "N/A"}
                           </span>
@@ -132,7 +132,7 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
                             Usou cupom?:
                           </span>
                           <span className="text-foreground/90">
-                          {customer.couponId ? "Sim" : "Não"}
+                          {payment.couponId ? "Sim" : "Não"}
                           </span>
                         </div>
                       </div>
@@ -142,7 +142,7 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
                             Valor pago:
                           </span>
                           <span className="text-foreground/90">
-                            {formatCurrency(customer.totalAmount ?? 0)}
+                            {formatCurrency(payment.totalAmount ?? 0)}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -150,7 +150,7 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
                             Quantidade:
                           </span>
                           <span className="text-foreground/90">
-                            {customer.quantity ?? 0}
+                            {payment.quantity ?? 0}
                           </span>
                         </div>
                       </div>
@@ -166,4 +166,4 @@ const ModalViewCustomer = ({ params }: PropsModal) => {
   );
 };
 
-export default ModalViewCustomer;
+export default ModalViewPayment;

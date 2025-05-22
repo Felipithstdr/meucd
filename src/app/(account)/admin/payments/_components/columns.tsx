@@ -9,7 +9,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getCustomerStatusPay } from "@/helpers/enum";
 
-import ModalViewCustomer from "./modal-view-customer";
+import ModalViewPayment from "./modal-view-payment";
 
 export type Payment = Prisma.PaymentGetPayload<{
   include: {
@@ -54,7 +54,7 @@ const ActionsCell = ({ row }: { row: { original: Payment } }) => {
       </Button>
 
       {customerView && (
-        <ModalViewCustomer
+        <ModalViewPayment
           params={{
             paymentCode: customerView,
             open: isOpenView,
