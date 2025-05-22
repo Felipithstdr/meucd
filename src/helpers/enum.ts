@@ -9,6 +9,7 @@ const getCustomerStatusPay = (paymentStatus: PaymentStatus) => {
     [PaymentStatus.canceling]: "Cancelando",
     [PaymentStatus.canceled]: "Cancelado",
     [PaymentStatus.transfer]: "Transferência",
+    [PaymentStatus.test]: "Teste",
   }[paymentStatus];
 };
 
