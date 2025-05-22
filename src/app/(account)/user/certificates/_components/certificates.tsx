@@ -1,8 +1,8 @@
 "use client";
 
-import { Card, CardBody, CardHeader, Chip, ScrollShadow } from "@heroui/react";
+import { Button, Card, CardBody, CardHeader, Chip, ScrollShadow } from "@heroui/react";
 import { DigitalCertificate } from "@prisma/client";
-import { format } from "date-fns";
+import { format, isBefore } from "date-fns";
 
 interface CDPros {
   certificates: DigitalCertificate[];
@@ -19,10 +19,11 @@ const Certificates = ({ certificates }: CDPros) => {
     if (status === false) return "Inativo";
   };
 
-  const cdTypeColor = (cnpj: boolean) => {
-    if (cnpj === true) return "bg-blue-400 font-bold text-base";
-    if (cnpj === false) return "bg-orange-300 font-bold text-base";
+  const cdTypeColor = (ecnpj: boolean) => {
+    if (ecnpj === true) return "bg-blue-400 font-bold text-base";
+    if (ecnpj === false) return "bg-orange-300 font-bold text-base";
   };
+
 
   return (
     <ScrollShadow
@@ -49,10 +50,10 @@ const Certificates = ({ certificates }: CDPros) => {
                   <span className="font-black dark:text-white">
                     Certificado:{" "}
                     <Chip
-                      className={`${cdTypeColor(!certificate.cnpj)}`}
+                      className={`${cdTypeColor(!certificate.ecnpj)}`}
                       size="sm"
                     >
-                      {certificate.cnpj ? "eCNPJ" : "eCPF"}
+                      {certificate.ecnpj ? "eCNPJ" : "eCPF"}
                     </Chip>
                   </span>
                   <span className="font-black dark:text-white">
@@ -72,6 +73,11 @@ const Certificates = ({ certificates }: CDPros) => {
                         ? format(certificate.expirationDate, "dd/MM/yyyy")
                         : "Não ativo"}
                     </time>
+                  </div>
+
+                  <div className="mt-1 flex text-sm justify-end text-black sm:text-base dark:text-white">
+                    <Button isDisabled={!certificate.expirationDate ||
+                      !isBefore(certificate.expirationDate, new Date())} className="dark:bg-white dark:text-black">Renovar</Button>
                   </div>
                 </CardBody>
               </Card>
