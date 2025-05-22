@@ -29,11 +29,14 @@ const DashboardPage = async ({ searchParams }: AdminProps) => {
 
   return (
     <div className="flex flex-col space-y-6 p-2 sm:overflow-hidden sm:p-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-black">Dashboard</h1>
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="min-w-[180px] rounded-xl bg-green-100 px-4 py-1 text-right text-green-800 shadow-sm">
-            <p className="flex items-center gap-1 text-sm font-medium">
+      <div className="flex flex-wrap justify-between gap-4">
+        <h1 className="min-w-full text-2xl font-bold text-black sm:min-w-fit">
+          Dashboard
+        </h1>
+
+        <div className="sm:w-xs w-sm grid grid-cols-2 items-center justify-center gap-4 overflow-x-auto sm:gap-4">
+          <div className="cols-span-1 rounded-lg bg-green-100 px-4 py-1 text-right text-green-800 shadow">
+            <p className="flex items-center justify-start gap-1 text-sm font-medium">
               <Wallet className="h-5 w-5" /> Saldo Atual
             </p>
             <p className="text-lg font-bold">
@@ -41,7 +44,7 @@ const DashboardPage = async ({ searchParams }: AdminProps) => {
             </p>
           </div>
 
-          <div className="min-w-[160px] max-w-[200px]">
+          <div className="cols-span-1">
             <TimeSelect />
           </div>
         </div>
@@ -50,7 +53,7 @@ const DashboardPage = async ({ searchParams }: AdminProps) => {
       <div className="order-2 grid grid-cols-1 gap-y-4 sm:order-none sm:grid-cols-3 sm:gap-6 sm:overflow-hidden">
         <div className="order-1 col-span-2 flex flex-col gap-6 sm:order-none sm:overflow-hidden">
           <SummaryCards {...dashboard} />
-          <div className="grid h-full grid-cols-3 grid-rows-1 gap-6 sm:overflow-hidden">
+          <div className="grid h-full gap-6 sm:grid-cols-3 sm:grid-rows-1 sm:overflow-hidden">
             <SplitPieChart {...dashboard} month={monthIsInvalid ? "" : month} />
             {/* <ExpensesPerCategory
               expesensPerCategory={dashboard.totalExpensePerCategory}

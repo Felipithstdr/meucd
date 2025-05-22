@@ -24,7 +24,8 @@ const TimeSelect = () => {
   return (
     <Select
       label="Selecione um mês"
-      className="sm:max-w-xs max-w-1/2" 
+      // className="sm:max-w-xs max-w-1/2"
+      className="w-full"
       color="primary"
       size="sm"
       selectedKeys={[month]}
